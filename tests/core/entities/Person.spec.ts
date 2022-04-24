@@ -1,5 +1,4 @@
 import { Person } from '@/core/entities/Person';
-import { PersonDoesntKnowAnyoneException } from '@/core/entities/utils/exceptions/person.exception';
 
 describe('Testes da classe Person', () => {
   it('Teste de conhecimento de primeiro grau', () => {
