@@ -16,6 +16,7 @@ app.use(
 const personController = new PersonController();
 RouterRegister(app, personController);
 docs.init(app, {
+  openapi: '3.0',
   info: {
     title: 'Person API',
     description: 'API for managing persons',
