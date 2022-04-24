@@ -1,0 +1,12 @@
+GET http://localhost:3000/persons
+Content-Type: application/json
+
+###
+
+GET http://localhost:3000/persons/João/friends
+Content-Type: application/json
+
+###
+
+GET http://localhost:3000/persons/Maria/friendsOfFriends
+Content-Type: application/json

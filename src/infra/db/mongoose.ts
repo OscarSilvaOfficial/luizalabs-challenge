@@ -7,7 +7,7 @@ export interface IMongoConfig {
   collectionName: string;
 }
 
-export class MongoDB implements DBContract<any> {
+export class MongoDB implements DBContract {
   private schema: Schema;
   private dbConnectionString: string;
   private collection: any;

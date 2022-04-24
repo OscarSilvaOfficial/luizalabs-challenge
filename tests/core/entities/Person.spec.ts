@@ -17,19 +17,10 @@ describe('Testes da classe Person', () => {
     const ana = new Person({ name: 'Ana', friends: [joao] });
     luiza.friendsBuilder(joao);
     joao.friendsBuilder(ana);
+    luiza.friendsOfFriendsBuilder([ana.name]);
 
     expect(luiza.friends).toEqual([joao]);
     expect(joao.friends).toEqual([luiza, ana]);
-    expect(luiza.friendsOfFriendsThatIDontKnow).toEqual([ana]);
-  });
-
-  it('Teste de validação de pessoa que não conhece ninguém', () => {
-    const luiza = new Person({ name: 'Luiza' });
-    try {
-      luiza.friendsOfFriendsThatIDontKnow;
-      throw new Error();
-    } catch (error) {
-      expect(error).toBeInstanceOf(PersonDoesntKnowAnyoneException);
-    }
+    expect(luiza.friendsOfFriends).toEqual([ana.name]);
   });
 });

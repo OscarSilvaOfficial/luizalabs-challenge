@@ -1,5 +1,5 @@
-export interface DBContract<T> {
+export interface DBContract {
   getAll(): Promise<any>;
   getByName(name: string): Promise<any>;
-  create(data: T): Promise<T>;
+  create(data: any): Promise<any>;
 }
