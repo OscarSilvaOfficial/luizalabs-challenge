@@ -1,4 +1,5 @@
 import { PersonDoesntKnowAnyoneException } from './utils/exceptions/person.exception';
+import { getArraysIntersection } from './utils/functions';
 
 export interface IPersonConstructor {
   name: string;
@@ -26,12 +27,6 @@ export class Person {
     return this._friends;
   }
 
-  getArraysIntersection(a1, a2) {
-    return a1.filter(function (n) {
-      return a2.indexOf(n) !== -1;
-    });
-  }
-
   get friendsOfFriends(): string[] {
     const allFriends = this._friendsOfFriends.filter(
       (friend) => friend !== this.name,
@@ -39,7 +34,7 @@ export class Person {
 
     if (!allFriends) throw new PersonDoesntKnowAnyoneException(this.name);
 
-    const intersection = this.getArraysIntersection(
+    const intersection = getArraysIntersection(
       allFriends.map((friend) => friend),
       this.friends.map((friend) => friend),
     );
