@@ -21,7 +21,7 @@ export async function connectToDatabase() {
   return collection;
 }
 
-const insertDataOnDB = async () => {
+export async function insertDataOnDB() {
   const collection = await connectToDatabase();
   const collectionData = await collection.find().toArray();
   if (collectionData.length === 0) {
@@ -30,6 +30,4 @@ const insertDataOnDB = async () => {
       `Data inserted successfully to collection: ${collection.collectionName}`,
     );
   }
-};
-
-insertDataOnDB();
+}

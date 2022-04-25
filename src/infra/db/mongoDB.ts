@@ -19,19 +19,29 @@ export class MongoDB implements DBContract {
       mongoConfig.dbConnectionString,
     );
 
-    await client.connect();
+    try {
+      await client.connect();
+      console.log(`Successfully connected to database: ${mongoConfig.dbName}`);
+    } catch (error) {
+      console.log(`Error connecting to database: ${mongoConfig.dbName}`);
+      console.log(error);
+      throw error;
+    }
 
-    const db: mongoDB.Db = client.db(mongoConfig.dbName);
+    try {
+      const db: mongoDB.Db = client.db(mongoConfig.dbName);
 
-    const collection: mongoDB.Collection = db.collection(
-      mongoConfig.collectionName,
-    );
+      const collection: mongoDB.Collection = db.collection(
+        mongoConfig.collectionName,
+      );
 
-    console.log(
-      `Successfully connected to database: ${db.databaseName} and collection: ${collection.collectionName}`,
-    );
-
-    this.driver = collection;
+      this.driver = collection;
+    } catch (error) {
+      console.log(
+        `Error connecting to collection: ${mongoConfig.collectionName}`,
+      );
+      throw error;
+    }
   }
 
   async getAll(): Promise<any> {

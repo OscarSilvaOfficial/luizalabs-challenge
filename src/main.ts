@@ -3,6 +3,9 @@ import { PersonController } from './presenters/controllers/person.controller';
 import { register as RouterRegister } from 'express-decorators';
 import bodyParser from 'body-parser';
 import docs from 'express-oas-generator';
+import { insertDataOnDB } from '../scripts/db/init_db';
+
+insertDataOnDB().then();
 
 const app = express();
 

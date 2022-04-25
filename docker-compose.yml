@@ -1,8 +1,24 @@
 version: '3.3'
 
 services:
+
+  mongoluizalabs:
+    image: mongo:5.0
+    ports:
+      - 27017:27017
+    volumes:
+      - ~/apps/mongo:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=test
+      - MONGO_INITDB_ROOT_PASSWORD=test
+
   api:
-    container_name: container-name
+    container_name: luizalabs-container
     build: .
     ports:
       - "3000:3000"
+    environment:
+      - MONGO_URL=mongodb://test:test@mongoluizalabs:27017/
+      - MONGO_DATABASE_NAME=test
+    depends_on:
+      - mongoluizalabs
