@@ -46,7 +46,7 @@ Responsável por todos os drivers como banco e libs de log, e algumas configura�
 Também no mesmo local foi inserido as `factories` dos objectos que precisam ser contruídos e são dessa camada.
 
 #### `Presenters`
-Possui a `controller`, onde recebe diretamente os dados das requisições chama os adapter e os utiliza para manipular dados e validar 
+Possui a `controller`, onde recebe diretamente os dados das requisições chama os adapters e os utiliza para manipular dados e validar 
 as regras de negócio chamando diretamente as entidades de domínio.
 
 Também possui alguns `helpers` como exceptions específicas ou funções de propósito geral.
