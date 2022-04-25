@@ -1,7 +1,7 @@
 # LuizaLabs Challenge
 
 ## Como rodar o projeto localmente?
-> O projeto fei criado em Node.js na versão v16.14.0 mas é compatível com as versões 12.x e 13.x...
+> O projeto foi criado em Node.js na versão v16.14.0 mas é compatível com as versões 12.x e 13.x...
 
 ### Executar projeto com Node.js
 
@@ -46,3 +46,10 @@ Rodar o projeto via Docker:
 ```zsh
 docker-compose up
 ```
+
+### Endpoits
+Os endpoits da aplicação foram expostos no swagger, 
+que você pode consultar pela URL: `http://localhost:3000/docs`
+
+### Arquitetura utilizada:
+Para criação do projeto procurei seguir os princípios do Clean Achitecture
