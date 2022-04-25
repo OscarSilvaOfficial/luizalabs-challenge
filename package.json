@@ -1,6 +1,6 @@
 {
-  "name": "project-name",
-  "version": "0.0.1",
+  "name": "luizalabs-challenge",
+  "version": "1.0.0",
   "description": "",
   "author": "",
   "private": true,
@@ -12,6 +12,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@nestjs/common": "^8.4.4",
     "axios": "^0.26.1",
     "body-parser": "^1.20.0",
     "dotenv": "^16.0.0",
@@ -20,7 +21,8 @@
     "express-oas-generator": "^1.0.41",
     "mongodb": "^4.5.0",
     "mongoose": "^6.3.1",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "rxjs": "^7.5.5"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",

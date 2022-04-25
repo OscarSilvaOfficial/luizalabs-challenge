@@ -15,6 +15,7 @@ services:
   api:
     container_name: luizalabs-container
     build: .
+    restart: always
     ports:
       - "3000:3000"
     environment:

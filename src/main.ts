@@ -1,13 +1,13 @@
-import express from 'express';
-import { PersonController } from './presenters/controllers/person.controller';
+import { PersonController } from '@/presenters/controllers/person.controller';
 import { register as RouterRegister } from 'express-decorators';
-import bodyParser from 'body-parser';
+import { NestLogger } from '@/infra/logger/nest.logger';
 import docs from 'express-oas-generator';
-import { insertDataOnDB } from '../scripts/db/init_db';
-
-insertDataOnDB().then();
+import bodyParser from 'body-parser';
+import express from 'express';
+import { insertDataOnDB } from './migrate';
 
 const app = express();
+const logger = new NestLogger();
 
 app.use(bodyParser.json());
 app.use(
@@ -27,4 +27,8 @@ docs.init(app, {
   },
 });
 
-app.listen(3000, () => console.log('Server is running on port 3000'));
+insertDataOnDB();
+
+app.listen(3000, () =>
+  logger.log('Server is running on port 3000', 'Server Starting'),
+);

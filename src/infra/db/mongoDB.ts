@@ -1,5 +1,6 @@
 import { DBContract } from '@/adapters/contracts/db.contract';
 import * as mongoDB from 'mongodb';
+import { NestLogger } from '../logger/nest.logger';
 
 export interface IMongoConfig {
   dbConnectionString: string;
@@ -9,8 +10,10 @@ export interface IMongoConfig {
 
 export class MongoDB implements DBContract {
   private driver: mongoDB.Collection;
+  private logger: NestLogger;
 
-  constructor(mongoConfig: IMongoConfig) {
+  constructor(mongoConfig: IMongoConfig, logger: NestLogger) {
+    this.logger = logger;
     this.createConnection(mongoConfig);
   }
 
@@ -21,10 +24,16 @@ export class MongoDB implements DBContract {
 
     try {
       await client.connect();
-      console.log(`Successfully connected to database: ${mongoConfig.dbName}`);
+      this.logger.log(
+        `Successfully connected to database: ${mongoConfig.dbName}`,
+        'MongoDB Connection',
+      );
     } catch (error) {
-      console.log(`Error connecting to database: ${mongoConfig.dbName}`);
-      console.log(error);
+      this.logger.error(
+        `Try to connect ${mongoConfig.dbConnectionString} on database: ${mongoConfig.dbName}`,
+        error,
+        'MongoDB Connection',
+      );
       throw error;
     }
 
@@ -37,8 +46,10 @@ export class MongoDB implements DBContract {
 
       this.driver = collection;
     } catch (error) {
-      console.log(
+      this.logger.error(
         `Error connecting to collection: ${mongoConfig.collectionName}`,
+        error,
+        'MongoDB Connection',
       );
       throw error;
     }
