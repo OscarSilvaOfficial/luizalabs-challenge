@@ -51,7 +51,7 @@ as regras de negócio chamando diretamente as entidades de domínio.
 
 Também possui alguns `helpers` como exceptions específicas ou funções de propósito geral.
 
-***obs: Optei por não criar casos de uso pois nesse caso quis deixar a abstração do fluxo mais simples***
+***obs: Optei por não criar casos de uso pois quis deixar a abstração do fluxo mais simples***
 
 #### `Adapters`
 Local onde eu coloco os `contratos` que a aplicação deve respeitar para não acoplar regras de negócio com infra e
