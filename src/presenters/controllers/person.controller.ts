@@ -1,6 +1,10 @@
 import { Person } from '@/core/entities/Person';
 import { personRepositoryFactory } from '@/infra/factories/repositories.factory';
-import { PersonPayload } from '../helpers/payload.helper';
+import {
+  PersonFriendsPayloadResponse,
+  PersonPayload,
+  PersonPayloadResponse,
+} from '../helpers/payload.helper';
 import {
   Route,
   Path,
@@ -10,16 +14,6 @@ import {
   Body,
   SuccessResponse,
 } from 'tsoa';
-
-interface PersonPayloadResponse {
-  name: string;
-  friends: string[];
-}
-
-interface PersonFriendsPayloadResponse {
-  name: string;
-  friendsOfFriends: string[];
-}
 
 const personRepostiry = personRepositoryFactory();
 
