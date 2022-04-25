@@ -1,32 +1,40 @@
-import { PersonRepository } from '@/adapters/repositories/person.repository';
 import { Person } from '@/core/entities/Person';
 import { personRepositoryFactory } from '@/infra/factories/repositories.factory';
-import { Request, Response } from 'express';
-import {
-  basePath as Router,
-  get as GET,
-  post as POST,
-} from 'express-decorators';
 import { PersonPayload } from '../helpers/payload.helper';
+import {
+  Route,
+  Path,
+  Controller,
+  Get,
+  Post,
+  Body,
+  SuccessResponse,
+} from 'tsoa';
 
-@Router('/persons')
-export class PersonController {
-  personRepostiry: PersonRepository;
+interface PersonPayloadResponse {
+  name: string;
+  friends: string[];
+}
 
-  constructor() {
-    this.personRepostiry = personRepositoryFactory();
-  }
+interface PersonFriendsPayloadResponse {
+  name: string;
+  friendsOfFriends: string[];
+}
 
-  @GET('/')
-  async getAllPersons(_request: Request, response: Response) {
+const personRepostiry = personRepositoryFactory();
+
+@Route('persons')
+export class PersonController extends Controller {
+  @Get()
+  async getAllPersons(): Promise<PersonPayloadResponse[]> {
     let persons;
 
     try {
-      persons = await this.personRepostiry.getAllPersons();
+      persons = await personRepostiry.getAllPersons();
     } catch (error) {
-      return response.status(404).json({
-        message: error.message,
-      });
+      // return response.status(404).json({
+      //   message: error.message,
+      // });
     }
 
     const responseData = persons.map((person) => ({
@@ -34,44 +42,46 @@ export class PersonController {
       friends: person.friends.map((friendName) => friendName),
     }));
 
-    return response.send(responseData);
+    return responseData;
   }
 
-  @GET('/:name/friends')
-  async getPersonFriends(request: Request, response: Response) {
+  @Get('{name}/friends')
+  async getPersonFriends(
+    @Path() name?: string,
+  ): Promise<PersonPayloadResponse> {
     let person;
-    const { name } = request.params;
 
     try {
-      person = await this.personRepostiry.getPersonByName(name);
+      person = await personRepostiry.getPersonByName(name);
     } catch (error) {
-      return response.status(404).json({
-        message: error.message,
-      });
+      // return response.status(404).json({
+      //   message: error.message,
+      // });
     }
 
-    return response.send({
+    return {
       name: person.name,
       friends: person.friends.map((friendName) => friendName),
-    });
+    };
   }
 
-  @GET('/:name/friendsOfFriends')
-  async getPersonFriendsOfFriends(request: Request, response: Response) {
+  @Get('{name}/friendsOfFriends')
+  async getPersonFriendsOfFriends(
+    @Path() name?: string,
+  ): Promise<PersonFriendsPayloadResponse> {
     let person;
-    const { name } = request.params;
 
     try {
-      person = await this.personRepostiry.getPersonByName(name);
+      person = await personRepostiry.getPersonByName(name);
     } catch (error) {
-      return response.status(404).json({
-        message: error.message,
-      });
+      // return response.status(404).json({
+      //   message: error.message,
+      // });
     }
 
     const friendsOfFriendsData = await Promise.all(
       person.friends.map(async (friendName) => {
-        const friend = await this.personRepostiry.getPersonByName(friendName);
+        const friend = await personRepostiry.getPersonByName(friendName);
         return friend.friends || [];
       }),
     );
@@ -84,25 +94,24 @@ export class PersonController {
       friendsOfFriends: friendsOfFriends,
     });
 
-    return response.send({
+    return {
       name: person.name,
       friendsOfFriends: person.friendsOfFriends,
-    });
+    };
   }
 
-  @POST('/')
-  async createPerson(request: Request, response: Response) {
-    const personPayload: PersonPayload = { ...request.body };
-
+  @SuccessResponse('201', 'Created') // Custom success response
+  @Post()
+  async createPerson(@Body() personPayload: PersonPayload): Promise<object> {
     const friends = await Promise.all(
       personPayload.friends.map(async (friendName: string) => {
         let person;
         try {
-          person = await this.personRepostiry.getPersonByName(friendName);
+          person = await personRepostiry.getPersonByName(friendName);
         } catch (error) {
-          throw response.status(404).json({
-            message: error.message,
-          });
+          // throw response.status(404).json({
+          //   message: error.message,
+          // });
         }
         return person;
       }),
@@ -113,16 +122,16 @@ export class PersonController {
       friends: friends,
     });
 
-    const dbResponse = await this.personRepostiry.createPerson(personEntity);
+    const dbResponse = await personRepostiry.createPerson(personEntity);
 
-    if (!dbResponse) {
-      return response.status(500).json({
-        message: 'Error creating person',
-      });
-    }
+    // if (!dbResponse) {
+    //   return response.status(500).json({
+    //     message: 'Error creating person',
+    //   });
+    // }
 
-    response.status(201).json({
+    return {
       message: 'Person created',
-    });
+    };
   }
 }
