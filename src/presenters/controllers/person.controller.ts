@@ -5,32 +5,21 @@ import {
   PersonPayload,
   PersonPayloadResponse,
 } from '../helpers/payload.helper';
-import {
-  Route,
-  Path,
-  Controller,
-  Get,
-  Post,
-  Body,
-  SuccessResponse,
-  TsoaResponse,
-  Res,
-} from 'tsoa';
+import { Route, Path, Controller, Get, Post, Body } from 'tsoa';
 
 const personRepostiry = personRepositoryFactory();
 
 @Route('persons')
 export class PersonController extends Controller {
   @Get()
-  async getAllPersons(
-    @Res() notFoundResponse: TsoaResponse<404, { reason: string }>,
-  ): Promise<PersonPayloadResponse[]> {
+  async getAllPersons(): Promise<PersonPayloadResponse[]> {
     let persons;
 
     try {
       persons = await personRepostiry.getAllPersons();
     } catch (error) {
-      return notFoundResponse(404, { reason: error.message });
+      this.setStatus(404);
+      return;
     }
 
     const responseData = persons.map((person) => ({
@@ -43,7 +32,6 @@ export class PersonController extends Controller {
 
   @Get('{name}/friends')
   async getPersonFriends(
-    @Res() notFoundResponse: TsoaResponse<404, { reason: string }>,
     @Path() name?: string,
   ): Promise<PersonPayloadResponse> {
     let person;
@@ -51,7 +39,8 @@ export class PersonController extends Controller {
     try {
       person = await personRepostiry.getPersonByName(name);
     } catch (error) {
-      return notFoundResponse(404, { reason: error.message });
+      this.setStatus(404);
+      return;
     }
 
     return {
@@ -62,7 +51,6 @@ export class PersonController extends Controller {
 
   @Get('{name}/friendsOfFriends')
   async getPersonFriendsOfFriends(
-    @Res() notFoundResponse: TsoaResponse<404, { reason: string }>,
     @Path() name?: string,
   ): Promise<PersonFriendsPayloadResponse> {
     let person;
@@ -70,7 +58,8 @@ export class PersonController extends Controller {
     try {
       person = await personRepostiry.getPersonByName(name);
     } catch (error) {
-      return notFoundResponse(404, { reason: error.message });
+      this.setStatus(404);
+      return;
     }
 
     const friendsOfFriendsData = await Promise.all(
@@ -94,20 +83,15 @@ export class PersonController extends Controller {
     };
   }
 
-  @SuccessResponse('201', 'Created')
   @Post()
-  async createPerson(
-    @Res() internalError: TsoaResponse<500, { reason: string }>,
-    @Res() notFoundResponse: TsoaResponse<404, { reason: string }>,
-    @Body() personPayload: PersonPayload,
-  ): Promise<object> {
+  async createPerson(@Body() personPayload: PersonPayload): Promise<object> {
     const friends = await Promise.all(
       personPayload.friends.map(async (friendName: string) => {
         let person;
         try {
           person = await personRepostiry.getPersonByName(friendName);
         } catch (error) {
-          return notFoundResponse(404, { reason: error.message });
+          throw this.setStatus(404);
         }
         return person;
       }),
@@ -121,8 +105,11 @@ export class PersonController extends Controller {
     const dbResponse = await personRepostiry.createPerson(personEntity);
 
     if (!dbResponse) {
-      return internalError(500, { reason: 'Person is not Created' });
+      this.setStatus(500);
+      return;
     }
+
+    this.setStatus(201);
 
     return {
       message: 'Person created',
