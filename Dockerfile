@@ -14,8 +14,7 @@ RUN npm run build
 
 FROM node:12.19.0-alpine3.9 as production
 
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
+ENV NODE_ENV=production
 
 WORKDIR /usr/src/app
 
@@ -27,4 +26,4 @@ COPY . .
 
 COPY --from=development /usr/src/app/dist ./dist/
 
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/src/main.js"]
