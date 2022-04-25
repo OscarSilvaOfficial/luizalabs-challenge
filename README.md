@@ -5,10 +5,8 @@
 
 ### Executar projeto com Node.js
 
-```bash
 Para instala-lo, basta executar o comando:
-
-```zsh
+```bash
 npm install
 ```
 
